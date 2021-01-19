@@ -21,22 +21,12 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Reflection;
 
-[assembly: Obfuscation(Feature = "rename symbol names with printable characters", Exclude = false)]
-[assembly: Obfuscation(Feature = "type renaming pattern 'ObfuscatedByTA'.*", Exclude = false)]
-[assembly: Obfuscation(Feature = "code control flow obfuscation", Exclude = false)]
-[assembly: Obfuscation(Feature = "encrypt resources [compress]", Exclude = false)]
-[assembly: Obfuscation(Feature = "PEVerify", Exclude = false)]
-[assembly: Obfuscation(Feature = "apply to type *: apply to member *: remove custom attribute System.ComponentModel.DescriptionAttribute", Exclude = false)]
-[assembly: Obfuscation(Feature = "design-time usage protection", Exclude = false)]
-[assembly: Obfuscation(Feature = "sanitize resources", Exclude = false)]
-[assembly: Obfuscation(Feature = "apply to type *: apply to member * when method or constructor: virtualization", Exclude = false)]
+
 
 
 namespace ETR
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -46,7 +36,6 @@ namespace ETR
 			worker.RunWorkerCompleted += worker_RunWorkerCompleted;
 			worker.WorkerReportsProgress = true;
 			worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
-			//label_done.Visibility = Visibility.Hidden;
 		}
 
         static String Filepath = null;
@@ -84,13 +73,7 @@ namespace ETR
                 string filename = dlg.FileName;
                 txt_assembly.Text = filename;
                 Filepath = filename;
-				//Stopwatch watch = new Stopwatch();
-				//watch.Start();
-				worker.RunWorkerAsync();
-	
-				//watch.Stop();
-				//worker.CancelAsync();
-				//DeterminateCircularProgress = watch.Elapsed.TotalSeconds.ToString();
+		worker.RunWorkerAsync();
 				
             }
         }
@@ -102,7 +85,6 @@ namespace ETR
 			Thread.Sleep(1000);
 			if (evalTypes.Count == 0)
 			{
-				//Console.WriteLine("Module does not seem limited by Eazfuscator.NET evaluation");
 				this.Dispatcher.Invoke(() =>
 				{
 					label_done.Text = "Failed";
@@ -112,9 +94,7 @@ namespace ETR
 			}
 			else if (evalTypes.Count > 1)
 			{
-				//Console.WriteLine("Multiple evaluation-like types detected:");
 				foreach (var evalType in evalTypes)
-					//Console.WriteLine(" {0} (MDToken = 0x{1:X8})", evalType.FullName, evalType.MDToken.Raw);
 
 				if (TypeIndex < 0)
 				{
@@ -122,11 +102,8 @@ namespace ETR
 				}
 				if (TypeIndex >= evalTypes.Count)
 				{
-					//Console.WriteLine("Type index {0} out-of-range, using default of 0", TypeIndex);
 					TypeIndex = 0;
 				}
-
-				//Console.WriteLine("Patching type at index {0}", TypeIndex);
 				Patching(evalTypes[TypeIndex]);
 				worker.ReportProgress(55, "Patching");
 				Thread.Sleep(1000);
@@ -134,7 +111,6 @@ namespace ETR
 			}
 			else
 			{
-				/*Console.WriteLine("Evaluation type found: {0} (MDToken = 0x{1:X8})",evalTypes[0].FullName, evalTypes[0].MDToken.Raw);*/
 				Patching(evalTypes[0]);
 				worker.ReportProgress(55, "Patching");
 				Thread.Sleep(1000);
@@ -144,16 +120,11 @@ namespace ETR
 
 		public void Patching(TypeDef evalType)
 		{
-			// Patch the bad method
 			var badMethod = GetStaticMethods(evalType, "System.Boolean", "System.Boolean")[0];
 			var instructions = badMethod.Body.Instructions;
 			instructions.Clear();
-
-			// `ret true`
 			instructions.Add(OpCodes.Ldc_I4_1.ToInstruction());
 			instructions.Add(OpCodes.Ret.ToInstruction());
-
-			// Don't need these any more
 			badMethod.Body.ExceptionHandlers.Clear();
 		}
 
@@ -199,19 +170,13 @@ namespace ETR
 
 			foreach (var method in def.Methods)
 			{
-				// Verify static
 				if (!method.IsStatic)
 					continue;
-
-				// Verify return type
 				if (!method.ReturnType.FullName.Equals(retType))
 					continue;
-
-				// Verify param count
 				if (paramTypes.Length != method.Parameters.Count)
 					continue;
 
-				// Verify param types
 				Boolean paramsMatch = true;
 				for (Int32 i = 0; i < paramTypes.Length && i < method.Parameters.Count; i++)
 				{
