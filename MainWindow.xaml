@@ -1,0 +1,36 @@
+﻿<Window x:Class="ETR.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ETR"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="Eazfuscator Trial Removal" Height="350" Width="400" WindowStyle="ToolWindow" Topmost="True" WindowStartupLocation="CenterScreen" Icon="Facebook Post 940x788 px.png">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+            <GradientStop Color="#FFCDEBF1" Offset="1"/>
+            <GradientStop Color="White" Offset="0.878"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Grid>
+        <Button
+  Style="{StaticResource MaterialDesignRaisedAccentButton}"
+  ToolTip="Resource name: MaterialDesignRaisedAccentButton"
+  Content="Assembly" Margin="10,10,258,0" Height="47" Click="Button_Click" VerticalAlignment="Top" />
+        <TextBox x:Name="txt_assembly" Margin="0,25,10,0" TextWrapping="Wrap" Text="TextBox" Cursor="IBeam" FontSize="16" HorizontalAlignment="Right" Width="232" Height="24" VerticalAlignment="Top"/>
+        <ProgressBar
+  x:Name="DeterminateCircularProgress"
+  Style="{StaticResource MaterialDesignCircularProgressBar}" Height="125" Margin="0,97,110,0" Width="172" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <TextBlock x:Name="label_done"
+  Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+  Text="Done" Margin="0,164,146,0" Height="44" VerticalAlignment="Top" HorizontalAlignment="Right" Width="93" Visibility="Hidden" />
+        <Label x:Name="label_own" Content="Modified By TA" Margin="0,0,126,8" VerticalAlignment="Bottom" FontWeight="Bold" HorizontalAlignment="Right" Width="138" FontSize="16"/>
+    </Grid>
+</Window>
