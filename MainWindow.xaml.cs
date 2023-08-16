@@ -89,6 +89,7 @@ namespace ETR
 				{
 					label_done.Text = "Failed";
 					label_done.Visibility = Visibility.Visible;
+					MessageBox.Show("version not support.");
 				});
 
 			}
@@ -120,12 +121,15 @@ namespace ETR
 
 		public void Patching(TypeDef evalType)
 		{
-			var badMethod = GetStaticMethods(evalType, "System.Boolean", "System.Boolean")[0];
-			var instructions = badMethod.Body.Instructions;
-			instructions.Clear();
-			instructions.Add(OpCodes.Ldc_I4_1.ToInstruction());
-			instructions.Add(OpCodes.Ret.ToInstruction());
-			badMethod.Body.ExceptionHandlers.Clear();
+			var badMethod = GetStaticMethods(evalType, "System.Boolean", "System.Boolean").ToList();
+			foreach(var method in badMethod)
+			{
+                var instructions = method.Body.Instructions;
+                instructions.Clear();
+                instructions.Add(OpCodes.Ldc_I4_1.ToInstruction());
+                instructions.Add(OpCodes.Ret.ToInstruction());
+                method.Body.ExceptionHandlers.Clear();
+            }
 		}
 
 		public IList<TypeDef> FindTypes(ModuleDefMD module)
@@ -135,22 +139,36 @@ namespace ETR
 			var types = module.GetTypes();
 			foreach (var typeDef in types)
 			{
-				if(typeDef.Methods.Count == 6
+                if (typeDef.Methods.Count == 7
+                && CountStaticMethods(typeDef, "System.Boolean", "System.Boolean") == 2
+                && CountStaticMethods(typeDef, "System.Void") == 3
+                && CountStaticMethods(typeDef, "System.Void", "System.Threading.ThreadStart") == 1
+                && CountStaticMethods(typeDef, "System.Boolean") == 1) //for version 2023 or higher
+                {
+                    evalTypes.Add(typeDef);
+                }
+                else if(typeDef.Methods.Count == 6
 				&& CountStaticMethods(typeDef, "System.Boolean", "System.Boolean") == 2
 				&& CountStaticMethods(typeDef, "System.Void") == 2
 				&& CountStaticMethods(typeDef, "System.Void", "System.Threading.ThreadStart") == 1
 				&& CountStaticMethods(typeDef, "System.Boolean") == 1)
-					evalTypes.Add(typeDef);
+				{
+                    evalTypes.Add(typeDef);
+                }
 				else if (typeDef.Methods.Count == 4
 				&& CountStaticMethods(typeDef, "System.Boolean", "System.Boolean") == 1
 				&& CountStaticMethods(typeDef, "System.Void") == 2
 				&& CountStaticMethods(typeDef, "System.Boolean") == 1)
-					evalTypes.Add(typeDef);
+				{
+                    evalTypes.Add(typeDef);
+                }
 				else if (typeDef.Methods.Count == 3
 				&& CountStaticMethods(typeDef, "System.Boolean", "System.Boolean") == 1
 				&& CountStaticMethods(typeDef, "System.Void") == 1
 				&& CountStaticMethods(typeDef, "System.Boolean") == 1)
-					evalTypes.Add(typeDef);
+				{
+                    evalTypes.Add(typeDef);
+                }
 			}
 
 			return evalTypes;
