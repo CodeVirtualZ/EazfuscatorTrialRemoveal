@@ -2,7 +2,8 @@
 This will remove the restrictions placed on executables by Eazfuscator.NET's trial version.
 
 # Support
-- Eazfuscator versions 4.9 - 2020.4 
+- Eazfuscator versions 4.9 - 2020.4
+- Eazfuscator version 2023 or higher (tested on 2023.3 it work!)
 
 # Require
 - First you need to install <a target="_blank" href="https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit">MaterialDesignInXamlToolkit</a> package
